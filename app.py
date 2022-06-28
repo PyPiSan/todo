@@ -1,4 +1,5 @@
-from flask import Flask, Response
+import re
+from flask import Flask, render_template
 from pymongo import MongoClient
 from datetime import date, datetime
 import json
@@ -15,21 +16,7 @@ def json_serial(obj):
         return obj.isoformat()
     raise TypeError ("Type %s not serializable" % type(obj))
 
-# try:
-#     # print(client.server_info())
-#     db = client.Todo
-#     collection = db.todo
-# except Exception:
-#     print("Unable to connect to the server.")  
 
-# todo1 = {
-#         "title": "My first todo!",
-#         "subject": "To learn MogoDB, PyMongo, Redis and other things",
-#         "date": datetime.datetime.utcnow()}
-# todo_id = db.todo.insert_one(todo1).inserted_id
-# print(todo_id)
-
-# To implement CRUD on MongoDB
 class MongoConnect:
     def __init__(self, data):
         conn_str = os.environ["CODE"]
@@ -75,8 +62,9 @@ def home():
     data = {}
     obj = MongoConnect(data)
     response = obj.read()
-    response=json.dumps(response, default=json_util.default)
-    return Response(response)
+    # response=json.dumps(response, default=json_util.default)
+    # print(response[0]['title'])
+    return render_template('home.html', response=response)
     
 
 if __name__ == "__main__":
